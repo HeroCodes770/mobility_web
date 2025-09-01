@@ -16,6 +16,17 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.css'
   ],
+  vite: {
+    assetsInclude: ['**/*.mp4', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif']
+  },
+  nitro: {
+    publicAssets: [
+      {
+        baseURL: '/media',
+        dir: 'public/media'
+      }
+    ]
+  },
   app: {
     head: {
       title: 'Active Mobility Ghana - Empowering Sustainable Transport',

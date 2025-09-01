@@ -2,6 +2,11 @@
   <div>
     <!-- Hero Section -->
     <section class="hero">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="/landing-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="hero-overlay"></div>
       <div class="container">
         <div class="hero-content fade-in-up">
           <h1>Empowering Ghana's Streets: Join the Movement for Active Mobility</h1>
@@ -44,7 +49,7 @@
         <h2 class="text-center mb-lg">Our Impact Areas</h2>
         <div class="card-grid">
           <div class="card fade-in-up" v-for="(feature, index) in features" :key="index" :style="{ animationDelay: `${index * 0.3}s` }">
-            <img :src="feature.image" :alt="feature.title" loading="lazy">
+            <div class="card-image" :style="{ backgroundImage: `url(/${feature.image})` }"></div>
             <h3>{{ feature.title }}</h3>
             <p>{{ feature.description }}</p>
             <NuxtLink :to="feature.link" class="btn-secondary">
@@ -76,25 +81,49 @@
       </div>
     </section>
 
-    <!-- Latest News/Blog Preview -->
+    <!-- Latest Events Section -->
     <section class="py-lg">
       <div class="container">
         <div class="text-center mb-lg">
-          <h2>Latest Updates</h2>
-          <p>Stay informed about our recent activities and upcoming events</p>
+          <h2>Our Recent Events</h2>
+          <p>Discover the exciting events and partnerships that are driving our mission forward</p>
         </div>
         <div class="card-grid">
-          <div class="card fade-in-up" v-for="(news, index) in latestNews" :key="index" :style="{ animationDelay: `${index * 0.2}s` }">
-            <img :src="news.image" :alt="news.title" loading="lazy">
+          <div class="card fade-in-up" v-for="(event, index) in recentEvents" :key="index" :style="{ animationDelay: `${index * 0.2}s` }">
+            <div class="card-image" :style="{ backgroundImage: `url(/${event.image})` }"></div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
-              <small style="color: var(--secondary-blue); font-weight: 600;">{{ news.date }}</small>
-              <span style="background-color: var(--primary-gold); color: var(--neutral-gray); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">{{ news.category }}</span>
+              <small style="color: var(--secondary-blue); font-weight: 600;">{{ event.date }}</small>
+              <span style="background-color: var(--primary-gold); color: var(--neutral-gray); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">{{ event.category }}</span>
             </div>
-            <h3>{{ news.title }}</h3>
-            <p>{{ news.excerpt }}</p>
-            <a href="#" class="btn-secondary" style="margin-top: var(--spacing-sm);">
-              Read More
+            <h3>{{ event.title }}</h3>
+            <p>{{ event.description }}</p>
+            <a v-if="event.video" href="#" class="btn-secondary" style="margin-top: var(--spacing-sm);" @click.prevent="playVideo(`/${event.video}`)">
+              <i class="fas fa-play"></i> Watch Video
             </a>
+            <a v-else href="#" class="btn-secondary" style="margin-top: var(--spacing-sm);">
+              View Photos
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Showcase Gallery -->
+    <section class="py-lg" style="background-color: white;">
+      <div class="container">
+        <div class="text-center mb-lg fade-in">
+          <h2>Our Community in Action</h2>
+          <p style="max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
+            Take a visual journey through our events, partnerships, and community activities.
+          </p>
+        </div>
+        
+        <div class="image-showcase">
+          <div class="showcase-item fade-in-up" v-for="(photo, index) in imageShowcase" :key="index" :style="{ animationDelay: `${index * 0.1}s` }">
+            <div class="showcase-image" :style="{ backgroundImage: `url(/${photo.image})` }"></div>
+            <div class="showcase-overlay">
+              <h4>{{ photo.title }}</h4>
+            </div>
           </div>
         </div>
       </div>
@@ -118,6 +147,23 @@
         </div>
       </div>
     </section>
+
+    <!-- Video Modal -->
+    <div v-if="showVideoModal" class="video-modal" @click="closeVideoModal">
+      <div class="video-modal-content" @click.stop>
+        <button class="video-modal-close" @click="closeVideoModal">
+          <i class="fas fa-times"></i>
+        </button>
+        <video 
+          :src="currentVideo" 
+          controls 
+          autoplay
+          style="width: 100%; max-width: 800px; border-radius: 8px;"
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -139,8 +185,8 @@ useHead({
 const stats = ref([
   { number: '500+', label: 'Community Members' },
   { number: '25km', label: 'Trails Promoted' },
-  { number: '12', label: 'Active Programs' },
-  { number: '8', label: 'Partner Organizations' }
+  { number: '4', label: 'Major Events Held' },
+  { number: '3', label: 'Embassy Partnerships' }
 ])
 
 // Featured sections
@@ -148,47 +194,100 @@ const features = ref([
   {
     title: 'Our Vision',
     description: 'Building connected, sustainable communities through active transport solutions that benefit everyone in Ghana.',
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+    image: '2025-09-01-15.09.36.jpg',
     link: '/vision-mission'
   },
   {
     title: 'Our Mission',
     description: 'Promoting active mobility, education, and community empowerment through the Eno Bike initiative and beyond.',
-    image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+    image: '2025-09-01-15.10.01.jpg',
     link: '/vision-mission'
   },
   {
     title: 'Our Programs',
     description: 'From bike-sharing pilots to trail development, discover how we\'re making active mobility accessible to all.',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+    image: '2025-09-01-15.10.07.jpg',
     link: '/programs'
   }
 ])
 
-// Latest news
-const latestNews = ref([
+// Recent events using actual events
+const recentEvents = ref([
   {
-    title: 'Successful Bike Safety Workshop in Kumasi',
-    excerpt: 'Over 100 participants learned essential cycling safety skills and advocacy techniques in our recent community workshop.',
-    image: 'https://images.unsplash.com/photo-1544191696-15693072b5d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    date: 'January 15, 2025',
-    category: 'Workshop'
+    title: 'Ride with the Israel Embassy - Bring the Hostages Home',
+    description: 'A powerful solidarity ride with the Israel Embassy to raise awareness and bring attention to the hostages situation.',
+    image: '2025-09-01-15.09.43.jpg',
+    date: 'December 2024',
+    category: 'Diplomatic',
+    video: null
   },
   {
-    title: 'New Greenway Project Launched in Accra',
-    excerpt: 'We\'re excited to announce our partnership with local authorities to develop a 5km greenway connecting three communities.',
-    image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    date: 'January 10, 2025',
-    category: 'Project'
+    title: 'Community Weekly Cycling Tour',
+    description: 'Our regular community cycling events that bring together cyclists of all levels for weekly tours around Accra.',
+    image: '2025-09-01-15.09.51.jpg',
+    date: 'Ongoing',
+    category: 'Community',
+    video: null
   },
   {
-    title: 'Eno Bike Initiative Reaches 1000 Users',
-    excerpt: 'Our flagship program has successfully engaged over 1000 community members in sustainable transport advocacy.',
-    image: 'https://images.unsplash.com/photo-1558437268-a2fbdcf06b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-    date: 'January 5, 2025',
-    category: 'Milestone'
+    title: 'Partnership with French Embassy - Ride with Team Europe',
+    description: 'An exciting partnership event with the French Embassy featuring Team Europe for a special cycling event.',
+    image: '2025-09-01-15.10.17.jpg',
+    date: 'November 2024',
+    category: 'Partnership',
+    video: 'Partnership-with-French-Embassy.mp4'
+  },
+  {
+    title: 'Cycling Tour to the Adomi Bridge',
+    description: 'An adventurous cycling tour to the iconic Adomi Bridge, showcasing Ghana\'s beautiful landscapes and infrastructure.',
+    image: '2025-09-01-15.10.27.jpg',
+    date: 'October 2024',
+    category: 'Adventure',
+    video: null
+  },
+  {
+    title: 'Team Building & Community Rides',
+    description: 'Building stronger connections through regular cycling activities and team building exercises.',
+    image: '2025-09-01-15.10.36.jpg',
+    date: 'September 2024',
+    category: 'Community',
+    video: null
+  },
+  {
+    title: 'Cycling Safety & Training Programs',
+    description: 'Comprehensive safety training and cycling skills development for community members.',
+    image: '2025-09-01-15.10.44.jpg',
+    date: 'August 2024',
+    category: 'Training',
+    video: null
   }
 ])
+
+// Image showcase for home page
+const imageShowcase = ref([
+  { image: '2025-09-01-15.09.17.jpg', title: 'Community Gathering' },
+  { image: '2025-09-01-15.09.36.jpg', title: 'Team Formation' },
+  { image: '2025-09-01-15.09.56.jpg', title: 'Event Preparation' },
+  { image: '2025-09-01-15.10.31.jpg', title: 'Safety Training' },
+  { image: '2025-09-01-15.10.39.jpg', title: 'Skill Development' },
+  { image: '2025-09-01-15.10.47.jpg', title: 'Event Coordination' },
+  { image: '2025-09-01-15.10.51.jpg', title: 'Community Engagement' },
+  { image: '2025-09-01-15.10.55.jpg', title: 'Event Success' }
+])
+
+// Video modal state
+const showVideoModal = ref(false)
+const currentVideo = ref('')
+
+const playVideo = (videoSrc) => {
+  currentVideo.value = videoSrc
+  showVideoModal.value = true
+}
+
+const closeVideoModal = () => {
+  showVideoModal.value = false
+  currentVideo.value = ''
+}
 
 // Add intersection observer for animations
 onMounted(() => {
@@ -222,6 +321,21 @@ onMounted(() => {
   line-height: 1.6;
 }
 
+/* Card image styling */
+.card-image {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  margin-bottom: var(--spacing-sm);
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-image {
+  transform: scale(1.05);
+}
+
 /* Hover effects for cards */
 .card:hover h3 {
   color: var(--accent-orange);
@@ -232,5 +346,132 @@ onMounted(() => {
 .stat-item:hover .stat-number {
   transform: scale(1.1);
   transition: transform 0.3s ease;
+}
+
+/* Hero video background */
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+/* Image showcase gallery */
+.image-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.showcase-item {
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.showcase-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.showcase-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.showcase-item:hover .showcase-image {
+  transform: scale(1.1);
+}
+
+.showcase-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: white;
+  padding: var(--spacing-sm);
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.showcase-item:hover .showcase-overlay {
+  transform: translateY(0);
+}
+
+.showcase-overlay h4 {
+  color: white;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Video modal styles */
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-md);
+}
+
+.video-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.video-modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.video-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--primary-gold);
 }
 </style>
