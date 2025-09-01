@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Hero Section - Full Screen -->
+    <section class="hero full-screen">
       <video class="hero-video" autoplay muted loop playsinline>
         <source src="/landing-video.mp4" type="video/mp4">
         Your browser does not support the video tag.
@@ -43,6 +43,28 @@
       </div>
     </section>
 
+    <!-- Rent a Bike Section -->
+    <section class="py-lg" style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue)); color: white;">
+      <div class="container">
+        <div class="text-center mb-lg fade-in">
+          <h2 style="color: white; margin-bottom: var(--spacing-md);">Rent a Bike</h2>
+          <p style="color: rgba(255, 255, 255, 0.9); max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
+            Experience the freedom of electric mobility with our convenient bike rental service.
+          </p>
+        </div>
+
+        <div class="rent-features">
+          <div class="feature-item fade-in-up" v-for="(feature, index) in rentFeatures" :key="index" :style="{ animationDelay: `${index * 0.2}s` }">
+            <div class="feature-icon">
+              <i :class="feature.icon"></i>
+            </div>
+            <h3 style="color: white;">{{ feature.title }}</h3>
+            <p style="color: rgba(255, 255, 255, 0.9);">{{ feature.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Sections Teaser -->
     <section class="py-lg" style="background-color: white;">
       <div class="container">
@@ -60,26 +82,7 @@
       </div>
     </section>
 
-    <!-- Mission Preview -->
-    <section class="py-lg" style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue)); color: white;">
-      <div class="container">
-        <div class="text-center">
-          <h2 style="color: white; margin-bottom: var(--spacing-md);">Our Mission in Action</h2>
-          <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto var(--spacing-lg) auto; opacity: 0.95;">
-            Through our Eno Bike initiative, we're connecting communities, promoting education, 
-            and creating sustainable transport solutions that benefit all Ghanaians.
-          </p>
-          <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
-            <NuxtLink to="/vision-mission" class="btn-primary" style="background-color: var(--primary-gold); color: var(--neutral-gray);">
-              Our Vision
-            </NuxtLink>
-            <NuxtLink to="/programs" class="btn-secondary" style="border-color: white; color: white;">
-              View Programs
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <!-- Latest Events Section -->
     <section class="py-lg">
@@ -108,26 +111,7 @@
       </div>
     </section>
 
-    <!-- Image Showcase Gallery -->
-    <section class="py-lg" style="background-color: white;">
-      <div class="container">
-        <div class="text-center mb-lg fade-in">
-          <h2>Our Community in Action</h2>
-          <p style="max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
-            Take a visual journey through our events, partnerships, and community activities.
-          </p>
-        </div>
-        
-        <div class="image-showcase">
-          <div class="showcase-item fade-in-up" v-for="(photo, index) in imageShowcase" :key="index" :style="{ animationDelay: `${index * 0.1}s` }">
-            <div class="showcase-image" :style="{ backgroundImage: `url(/${photo.image})` }"></div>
-            <div class="showcase-overlay">
-              <h4>{{ photo.title }}</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+
 
     <!-- Call to Action -->
     <section class="py-lg" style="background-color: var(--neutral-white); border-top: 3px solid var(--primary-gold);">
@@ -211,7 +195,7 @@ const features = ref([
   }
 ])
 
-// Recent events using actual events
+// Recent events - only your 3 actual events
 const recentEvents = ref([
   {
     title: 'Ride with the Israel Embassy - Bring the Hostages Home',
@@ -219,14 +203,6 @@ const recentEvents = ref([
     image: '2025-09-01-15.09.43.jpg',
     date: 'December 2024',
     category: 'Diplomatic',
-    video: null
-  },
-  {
-    title: 'Community Weekly Cycling Tour',
-    description: 'Our regular community cycling events that bring together cyclists of all levels for weekly tours around Accra.',
-    image: '2025-09-01-15.09.51.jpg',
-    date: 'Ongoing',
-    category: 'Community',
     video: null
   },
   {
@@ -244,35 +220,31 @@ const recentEvents = ref([
     date: 'October 2024',
     category: 'Adventure',
     video: null
-  },
-  {
-    title: 'Team Building & Community Rides',
-    description: 'Building stronger connections through regular cycling activities and team building exercises.',
-    image: '2025-09-01-15.10.36.jpg',
-    date: 'September 2024',
-    category: 'Community',
-    video: null
-  },
-  {
-    title: 'Cycling Safety & Training Programs',
-    description: 'Comprehensive safety training and cycling skills development for community members.',
-    image: '2025-09-01-15.10.44.jpg',
-    date: 'August 2024',
-    category: 'Training',
-    video: null
   }
 ])
 
-// Image showcase for home page
-const imageShowcase = ref([
-  { image: '2025-09-01-15.09.17.jpg', title: 'Community Gathering' },
-  { image: '2025-09-01-15.09.36.jpg', title: 'Team Formation' },
-  { image: '2025-09-01-15.09.56.jpg', title: 'Event Preparation' },
-  { image: '2025-09-01-15.10.31.jpg', title: 'Safety Training' },
-  { image: '2025-09-01-15.10.39.jpg', title: 'Skill Development' },
-  { image: '2025-09-01-15.10.47.jpg', title: 'Event Coordination' },
-  { image: '2025-09-01-15.10.51.jpg', title: 'Community Engagement' },
-  { image: '2025-09-01-15.10.55.jpg', title: 'Event Success' }
+// Rent a bike features
+const rentFeatures = ref([
+  {
+    title: 'Your Electric Bike at Home',
+    description: 'Your electric bike, that you keep at your home, and ride when you want to.',
+    icon: 'fas fa-bicycle'
+  },
+  {
+    title: 'Flexible Payment Options',
+    description: 'Pay monthly - or weekly, where available - for your e-bike. Theft Protection included, too.',
+    icon: 'fas fa-coins'
+  },
+  {
+    title: 'Best Way to Move Around',
+    description: 'You\'re going to love riding an awesome Zygg e-bike, the best way to move around the city - and super fun, too!',
+    icon: 'fas fa-map-marker-alt'
+  },
+  {
+    title: 'Expert Maintenance Service',
+    description: 'If you need a fix, our expert technicians will get you back riding quickly. A small fee for At-Home service applies.',
+    icon: 'fas fa-tools'
+  }
 ])
 
 // Video modal state
@@ -374,62 +346,58 @@ onMounted(() => {
   z-index: 3;
 }
 
-/* Image showcase gallery */
-.image-showcase {
+/* Full screen hero */
+.hero.full-screen {
+  min-height: 100vh;
+}
+
+/* Rent features */
+.rent-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
   margin-top: var(--spacing-lg);
 }
 
-.showcase-item {
-  position: relative;
-  height: 200px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.feature-item {
+  text-align: center;
+  padding: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
 
-.showcase-item:hover {
+.feature-item:hover {
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.showcase-image {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.3s ease;
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--primary-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-md) auto;
+  font-size: 2rem;
+  color: var(--neutral-gray);
 }
 
-.showcase-item:hover .showcase-image {
-  transform: scale(1.1);
+.feature-item h3 {
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.3rem;
 }
 
-.showcase-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  color: white;
-  padding: var(--spacing-sm);
-  text-align: center;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-
-.showcase-item:hover .showcase-overlay {
-  transform: translateY(0);
-}
-
-.showcase-overlay h4 {
-  color: white;
-  margin: 0;
+.feature-item p {
   font-size: 1rem;
+  line-height: 1.6;
 }
+
+
 
 /* Video modal styles */
 .video-modal {
